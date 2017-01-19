@@ -2,7 +2,11 @@
     "name": "colyii/laravel-fuiou",
     "description": "Fuiou 富友金账户",
     "keywords": ["L5", "Laravel 5", "Laravel", "Fuiou", "Fuiou SDK"],
+    "keywords": ["colyii", "php", "laravel", "laravel"],
+    "homepage": "https://github.com/colyii/laravel-fuiou",
     "license": "MIT",
+    "type": "project",
+    "version":"1.0.0",
     "authors": [
         {
             "name": "colyii",
