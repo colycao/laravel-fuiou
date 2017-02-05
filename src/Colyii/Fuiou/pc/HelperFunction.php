@@ -3,9 +3,11 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 16:25:28
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 08:59:20
+ * @Last Modified time: 2017-02-05 11:34:43
  */
 namespace Colyii\Fuiou\pc;
+
+use Illuminate\Support\Facades\Log;
 
 class HelperFunction
 {
@@ -67,5 +69,10 @@ class HelperFunction
         $json   = json_encode($string);
         $object = json_decode($json);
         return $object;
+    }
+
+    public static function log($url, $data, $code)
+    {
+        Log::info('Fuiou: ' . json_decode([$url, json_decode($data), $code]));
     }
 }

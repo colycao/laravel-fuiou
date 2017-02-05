@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 15:12:31
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-04 16:04:39
+ * @Last Modified time: 2017-02-05 11:21:46
  */
 
 namespace Colyii\Fuiou;
@@ -37,8 +37,8 @@ class FuiouServiceProvider extends ServiceProvider
             $pcFuiou->out_cust_no     = config('colyii-fuiou.out_cust_no');
             $pcFuiou->in_cust_no      = config('colyii-fuiou.in_cust_no');
             $pcFuiou->loan_in_cust_no = config('colyii-fuiou.loan_in_cust_no');
-            $pcFuiou->privateKeyPath  = __DIR__ . '\\config\\key\\php_prkey.pem';
-            $pcFuiou->publicKeyPath   = __DIR__ . '\\config\\key\\php_pbkey.pem';
+            $pcFuiou->privateKeyPath  = __DIR__ . '/config/key/php_prkey.pem';
+            $pcFuiou->publicKeyPath   = __DIR__ . '/config/key/php_pbkey.pem';
             $pcFuiou->jzhUrl          = config('colyii-fuiou.jzhUrl');
             $pcFuiou->PageUrl         = config('colyii-fuiou.PageUrl');
             $pcFuiou->BackUrl         = config('colyii-fuiou.BackUrl');
@@ -53,8 +53,8 @@ class FuiouServiceProvider extends ServiceProvider
             $mobileFuiou->out_cust_no     = config('colyii-fuiou.out_cust_no');
             $mobileFuiou->in_cust_no      = config('colyii-fuiou.in_cust_no');
             $mobileFuiou->loan_in_cust_no = config('colyii-fuiou.loan_in_cust_no');
-            $mobileFuiou->privateKeyPath  = __DIR__ . '\\config\\key\\php_prkey.pem';
-            $mobileFuiou->publicKeyPath   = __DIR__ . '\\config\\key\\php_pbkey.pem';
+            $mobileFuiou->privateKeyPath  = __DIR__ . '/config/key/php_prkey.pem';
+            $mobileFuiou->publicKeyPath   = __DIR__ . '/config/key/php_pbkey.pem';
             $mobileFuiou->jzhUrl          = config('colyii-fuiou.jzhUrl');
             $mobileFuiou->PageUrl         = config('colyii-fuiou.PageUrl');
             $mobileFuiou->BackUrl         = config('colyii-fuiou.BackUrl');
