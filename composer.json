@@ -15,11 +15,12 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "colyii/laravel-fuiou": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Colyii\\Fuiou\\": "src/colyii/laravel-fuiou/"
+            "Colyii\\Fuiou\\": "src/Colyii/Fuiou"
         }
     },
     "minimum-stability": "stable"
