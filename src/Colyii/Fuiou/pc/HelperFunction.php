@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 16:25:28
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 14:18:24
+ * @Last Modified time: 2017-02-05 14:59:59
  */
 namespace Colyii\Fuiou\pc;
 
@@ -33,7 +33,22 @@ class HelperFunction
         return date('Ymd') . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 12);
     }
 
-    public static function unset_keys($data)
+    public static function pinjie_rsaSign($data, $url)
+    {
+        ksort($data);
+        if ('authConfig' == $url) {
+            end($data);
+            $last_key   = key($data);
+            $last_value = array_pop($data);
+            $data       = array_merge(array($last_key => $last_value), $data);
+        } elseif ('reg' == $url || 'app/appWebReg' == $url) {
+            unset($data['certif_tp']);
+        }
+
+        return implode('|', $data);
+    }
+
+    public static function pinjie_rsaVerify($data)
     {
         ksort($data);
         $unset_keys = array(
@@ -71,7 +86,7 @@ class HelperFunction
         return $object;
     }
 
-    public static function log($url, $data, $code)
+    public static function log($url, $code, $data, $pinjie)
     {
         $msg_arr = [
             '0000' => '交易成功',
@@ -327,12 +342,13 @@ class HelperFunction
             200029 => '交易金额超限',
             200098 => '交易超时',
         ];
+        $msg = $msg_arr[$code];
         Log::useDailyFiles(storage_path() . '/logs/fuiou.log');
-        Log::error([$url, $code, $data]);
+        Log::error([$url, $code, $msg, $data, $pinjie]);
 
         return [
             'code' => $code,
-            'msg'  => $msg_arr[$code],
+            'msg'  => $msg,
         ];
     }
 }

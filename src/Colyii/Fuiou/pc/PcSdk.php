@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 13:53:56
+ * @Last Modified time: 2017-02-05 14:58:55
  */
 namespace Colyii\Fuiou\pc;
 
@@ -597,7 +597,7 @@ class PcSdk
             if ('0000' == $plain->resp_code) {
                 $r = $plain; //返回对象
             } else {
-                $r = HelperFunction::log($url, $data, $plain->resp_code); //返回数组
+                $r = HelperFunction::log($url, $plain->resp_code, $data, HelperFunction::pinjie_rsaSign($data)); //返回数组
             }
         }
         return $r;
@@ -611,16 +611,7 @@ class PcSdk
      */
     public function rsaSign($data, $url = '')
     {
-        ksort($data);
-        if ('authConfig' == $url) {
-            end($data);
-            $last_key   = key($data);
-            $last_value = array_pop($data);
-            $data       = array_merge(array($last_key => $last_value), $data);
-        } elseif ('reg' == $url || 'app/appWebReg' == $url) {
-            unset($data['certif_tp']);
-        }
-        $data             = implode('|', $data);
+        $data             = HelperFunction::pinjie_rsaSign($data, $url);
         $private_key_path = $this->privateKeyPath;
         $priKey           = file_get_contents($private_key_path);
         $res              = openssl_get_privatekey($priKey);
@@ -648,7 +639,7 @@ class PcSdk
 
         if (is_array($data) && true === $form) {
             $sign   = $data['signature']; //去掉返回签名值
-            $data   = HelperFunction::unset_keys($data);
+            $data   = HelperFunction::pinjie_rsaVerify($data);
             $result = (bool) openssl_verify($data, base64_decode($sign), $res);
         } else {
             try {
