@@ -2,7 +2,6 @@
     "name": "colyii/laravel-fuiou",
     "description": "Fuiou 富友金账户",
     "keywords": ["L5", "Laravel 5", "Laravel", "Fuiou", "Fuiou SDK"],
-    "keywords": ["colyii", "php", "laravel", "laravel"],
     "homepage": "https://github.com/colyii/laravel-fuiou",
     "license": "MIT",
     "type": "project",
@@ -11,7 +10,7 @@
         {
             "name": "colyii",
             "email": "colyii@icloud.com",
-            "homepage": "http://www.php2py.com",
+            "homepage": "http://php2py.com",
             "role": "Developer"
         }
     ],
@@ -20,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Colyii\\LaravelFuiou\\": "src/colyii/laravel-fuiou/"
+            "Colyii\\Fuiou\\": "src/colyii/laravel-fuiou/"
         }
     },
     "minimum-stability": "stable"

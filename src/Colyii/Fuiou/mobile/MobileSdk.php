@@ -3,15 +3,27 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-01-19 16:56:21
+ * @Last Modified time: 2017-02-05 10:20:20
  */
-namespace Colyii\LaravelFuiou;
+namespace Colyii\Fuiou\mobile;
 
 /**
  * 富友金账户
  */
-class Fuiou
+class MobileSdk
 {
+    public $mchnt_cd;
+    public $username;
+    public $password;
+    public $out_cust_no;
+    public $in_cust_no;
+    public $loan_in_cust_no;
+    public $privateKeyPath;
+    public $publicKeyPath;
+    public $jzhUrl;
+    public $PageUrl;
+    public $BackUrl;
+
     /**
      * 开户注册
      * @param  [array] $params [开户参数]
@@ -20,7 +32,7 @@ class Fuiou
     public function reg(array $params)
     {
         $data = array(
-            'mchnt_cd'       => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'       => $this->mchnt_cd,
             'city_id'        => $params['city_id'], //开户行地区代码
             'mchnt_txn_ssn'  => $params['mchnt_txn_ssn'],
             'parent_bank_id' => $params['parent_bank_id'], //开户行行别
@@ -48,7 +60,7 @@ class Fuiou
     public function webReg(array $params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'user_id_from'    => $params['user_id_from'],
             'mobile_no'       => $params['mobile_no'], //手机号码
@@ -59,8 +71,8 @@ class Fuiou
             'parent_bank_id'  => $params['parent_bank_id'], //开户行行别
             'bank_nm'         => $params['bank_nm'], //开户行支行名称
             'capAcntNo'       => $params['capAcntNo'], //银行账户卡号
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/webReg', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/webReg', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/webReg', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/webReg', //商户后台通知地址
         );
 
         return $this->formPost('webReg', $data);
@@ -74,7 +86,7 @@ class Fuiou
     public function webLogin(array $params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'cust_no'       => $params['cust_no'], //登录账户
             'location'      => $params['location'], //成功登录后跳转页面代码
@@ -91,7 +103,7 @@ class Fuiou
     public function setSms($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'login_id'      => $params['login_id'], //用户登录ID
             'cztx_tp'       => $params['cztx_tp'], //充值提现
@@ -111,11 +123,11 @@ class Fuiou
     public function authConfig($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //用户登录ID
             'busi_tp'         => $params['busi_tp'], //业务类型
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/authConfig', //商户返回地址
+            'page_notify_url' => $this->PageUrl . '/authConfig', //商户返回地址
         );
 
         return $this->formPost('authConfig', $data);
@@ -124,10 +136,10 @@ class Fuiou
     public function changeMobile($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //用户登录ID
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/changeMobile', //商户返回地址
+            'page_notify_url' => $this->PageUrl . '/changeMobile', //商户返回地址
         );
 
         return $this->formPost('400101', $data);
@@ -141,10 +153,10 @@ class Fuiou
     public function changeCard2($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //用户登录ID
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/changeCard2', //商户返回地址
+            'page_notify_url' => $this->PageUrl . '/changeCard2', //商户返回地址
         );
 
         return $this->formPost('changeCard2', $data);
@@ -158,7 +170,7 @@ class Fuiou
     public function preAuth($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //出账账户
             'in_cust_no'    => $params['in_cust_no'], //入账账户
@@ -177,7 +189,7 @@ class Fuiou
     public function preAuthCancel($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //出账账户
             'in_cust_no'    => $params['in_cust_no'], //入账账户
@@ -196,7 +208,7 @@ class Fuiou
     public function transferBmu($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
@@ -216,7 +228,7 @@ class Fuiou
     public function transferBu($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
@@ -236,7 +248,7 @@ class Fuiou
     public function freeze($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'cust_no'       => $params['cust_no'], //冻结目标登录账户
             'amt'           => $params['amt'], //冻结金额
@@ -254,7 +266,7 @@ class Fuiou
     public function transferBmuAndFreeze($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
@@ -273,7 +285,7 @@ class Fuiou
     public function transferBuAndFreeze($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'], //订单号
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //付款登录账户
@@ -292,7 +304,7 @@ class Fuiou
     public function transferBuAndFreeze2Freeze($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
@@ -311,7 +323,7 @@ class Fuiou
     public function unFreeze($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'cust_no'       => $params['cust_no'], //解冻目标登录账户
             'amt'           => $params['amt'], //解冻金额
@@ -329,12 +341,12 @@ class Fuiou
     public function recharge_500001($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //提现金额
             'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/recharge', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/recharge', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
         );
 
         return $this->formPost('500001', $data);
@@ -348,12 +360,12 @@ class Fuiou
     public function recharge_500002($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //提现金额
             'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/recharge', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/recharge', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
         );
 
         return $this->formPost('500002', $data);
@@ -367,14 +379,14 @@ class Fuiou
     public function recharge_500012($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //提现金额
             'amt'             => $params['amt'], //充值金额
             'order_pay_type'  => $params['order_pay_type'], //支付类型 B2C B2B
             'iss_ins_cd'      => $params['iss_ins_cd'], //银行代码，测试光大 0803030000
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/recharge', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/recharge', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
         );
 
         return $this->formPost('500012', $data);
@@ -388,12 +400,12 @@ class Fuiou
     public function cash($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //提现金额
             'amt'             => $params['amt'], //解冻金额
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/cash', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/cash', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/cash', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
         );
 
         return $this->formPost('500003', $data);
@@ -407,7 +419,7 @@ class Fuiou
     public function balanceAction($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'mchnt_txn_dt'  => $params['mchnt_txn_dt'], //交易日期
             'cust_no'       => $params['cust_no'], //待查询的登录帐户
@@ -424,7 +436,7 @@ class Fuiou
     public function query($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'user_ids'      => $params['user_ids'], //用户登录ID
             'start_day'     => $params['start_day'], //起始时间
@@ -442,7 +454,7 @@ class Fuiou
     public function queryTxn($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'busi_tp'       => $params['busi_tp'], //交易类型
             'start_day'     => $params['start_day'], //起始时间
@@ -467,7 +479,7 @@ class Fuiou
     {
         $data = array(
             'ver'           => '0.44',
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'busi_tp'       => $params['busi_tp'], //交易类型（PW11 充值、PWTX 提现、PWTP 退票）
             'txn_ssn'       => $params['txn_ssn'], //交易流水
@@ -490,7 +502,7 @@ class Fuiou
     public function queryUserInfs($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'mchnt_txn_dt'  => $params['mchnt_txn_dt'], //交易日期
             'user_ids'      => $params['user_ids'], //待查询的登录帐户列表
@@ -507,7 +519,7 @@ class Fuiou
     public function queryUserInfs_v2($params)
     {
         $data = array(
-            'mchnt_cd'       => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'       => $this->mchnt_cd,
             'mchnt_txn_ssn'  => $params['mchnt_txn_ssn'],
             'mchnt_txn_dt'   => $params['mchnt_txn_dt'], //交易日期
             'user_ids'       => $params['user_ids'], //待查询的登录帐户列表
@@ -526,7 +538,7 @@ class Fuiou
     public function queryChangeCard($params)
     {
         $data = array(
-            'mchnt_cd'      => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'      => $this->mchnt_cd,
             'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
             'login_id'      => $params['login_id'], //用户登录ID
             'txn_ssn'       => $params['txn_ssn'], //请求流水
@@ -538,7 +550,7 @@ class Fuiou
     public function formPost($url, $data)
     {
         $data['signature'] = $this->rsaSign($data, $url);
-        $result            = buildForm($data, param('fuiou')['jzhUrl'] . $url . '.action');
+        $result            = HelperFunction::buildForm($data, $this->jzhUrl . $url . '.action');
         return $result;
     }
 
@@ -553,7 +565,7 @@ class Fuiou
         $data['signature'] = $this->rsaSign($data, $url);
         $ch                = curl_init();
 
-        $fuiou_url = param('fuiou')['jzhUrl'] . $url . '.action';
+        $fuiou_url = $this->jzhUrl . $url . '.action';
         curl_setopt($ch, CURLOPT_URL, $fuiou_url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
@@ -578,7 +590,7 @@ class Fuiou
     {
         $data = array(
             'ver'             => '0.44',
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'user_id_from'    => $params['user_id_from'], //用户在商户系统的标志
             'mobile_no'       => $params['mobile_no'], //手机号码
@@ -590,8 +602,8 @@ class Fuiou
             'parent_bank_id'  => $params['parent_bank_id'], //开户行行别
             'bank_nm'         => $params['bank_nm'], //开户行支行名称
             'capAcntNo'       => $params['capAcntNo'], //银行账户卡号
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/webReg', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/webReg', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/webReg', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/webReg', //商户后台通知地址
         );
 
         return $this->formPost('app/appWebReg', $data);
@@ -605,12 +617,12 @@ class Fuiou
     public function appRecharge500002(array $params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //用户id
             'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/recharge', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/recharge', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
         );
 
         return $this->formPost('app/500002', $data);
@@ -623,12 +635,12 @@ class Fuiou
     public function appCash($params)
     {
         $data = array(
-            'mchnt_cd'        => param('fuiou')['mchnt_cd'],
+            'mchnt_cd'        => $this->mchnt_cd,
             'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
             'login_id'        => $params['login_id'], //提现金额
             'amt'             => $params['amt'], //解冻金额
-            'page_notify_url' => hu() . param('fuiou')['PageUrl'] . '/cash', //商户返回地址
-            'back_notify_url' => hu() . param('fuiou')['BackUrl'] . '/cash', //商户后台通知地址
+            'page_notify_url' => $this->PageUrl . '/cash', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
         );
         return $this->formPost('app/500003', $data);
     }
@@ -645,11 +657,11 @@ class Fuiou
         $r = false;
         //返回数据延签
         if ($this->rsaVerify($result)) {
-            $plain = $this->xml_object($result)->plain;
+            $plain = HelperFunction::xml_object($result)->plain;
             if ('0000' == $plain->resp_code) {
                 $r = $plain; //返回对象
             } else {
-                $r = FuiouReturnLog::log($url, $data, $plain->resp_code); //返回数组
+                $r = HelperFunction::log($url, $data, $plain->resp_code); //返回数组
             }
         }
         return $r;
@@ -673,7 +685,7 @@ class Fuiou
             unset($data['certif_tp']);
         }
         $data             = implode('|', $data);
-        $private_key_path = param('fuiou')['privateKeyPath'];
+        $private_key_path = $this->privateKeyPath;
         $priKey           = file_get_contents($private_key_path);
         $res              = openssl_get_privatekey($priKey);
         openssl_sign($data, $sign, $res);
@@ -694,17 +706,17 @@ class Fuiou
     {
         $result = false;
 
-        $ali_public_key_path = param('fuiou')['publicKeyPath'];
+        $ali_public_key_path = $this->publicKeyPath;
         $pubKey              = file_get_contents($ali_public_key_path);
         $res                 = openssl_get_publickey($pubKey);
 
         if (is_array($data) && true === $form) {
             $sign   = $data['signature']; //去掉返回签名值
-            $data   = $this->unset_keys($data);
+            $data   = HelperFunction::unset_keys($data);
             $result = (bool) openssl_verify($data, base64_decode($sign), $res);
         } else {
             try {
-                if (is_object($object = $this->xml_object($data))) {
+                if (is_object($object = HelperFunction::xml_object($data))) {
                     $sign = $object->signature;
                     //正则匹配 data
                     $pattern = "/.*?<ap>(.*?)<signature>.*?/";
@@ -716,46 +728,8 @@ class Fuiou
                 throw $e;
             }
         }
-
         openssl_free_key($res);
+
         return $result;
-    }
-
-    public function unset_keys($data)
-    {
-        ksort($data);
-        $unset_keys = array(
-            'url',
-            'signature',
-            'resp_desc',
-            'artif_nm',
-        );
-        if (in_array($data['url'], array('changeMobile', 'authConfig', 'changeCard2'))) {
-            $unset_keys = array(
-                'url',
-                'signature',
-                'artif_nm',
-            );
-        }
-
-        foreach ($unset_keys as $key => $value) {
-            if (array_key_exists($value, $data)) {
-                unset($data[$value]);
-            }
-        }
-        return implode('|', $data);
-    }
-
-    /**
-     * [xml_object xml转对象]
-     * @param  [xml] $xml [待处理的xml数据]
-     * @return [object]      [返回对象]
-     */
-    public function xml_object($xml)
-    {
-        $string = simplexml_load_string($xml);
-        $json   = json_encode($string);
-        $object = json_decode($json);
-        return $object;
     }
 }
