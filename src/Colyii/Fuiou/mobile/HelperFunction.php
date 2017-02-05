@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 16:25:28
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-04 17:15:57
+ * @Last Modified time: 2017-02-05 13:45:02
  */
 namespace Colyii\Fuiou\mobile;
 
@@ -67,5 +67,11 @@ class HelperFunction
         $json   = json_encode($string);
         $object = json_decode($json);
         return $object;
+    }
+
+    public static function log($url, $data, $code)
+    {
+        Log::useDailyFiles(storage_path() . '/logs/fuiou.log');
+        Log::error([$url, $code, $data]);
     }
 }

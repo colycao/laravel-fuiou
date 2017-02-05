@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 16:25:28
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 11:34:43
+ * @Last Modified time: 2017-02-05 13:44:51
  */
 namespace Colyii\Fuiou\pc;
 
@@ -73,6 +73,7 @@ class HelperFunction
 
     public static function log($url, $data, $code)
     {
-        Log::info('Fuiou: ' . json_decode([$url, json_decode($data), $code]));
+        Log::useDailyFiles(storage_path() . '/logs/fuiou.log');
+        Log::error([$url, $code, $data]);
     }
 }

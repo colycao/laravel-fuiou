@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 10:20:20
+ * @Last Modified time: 2017-02-05 13:53:31
  */
 namespace Colyii\Fuiou\mobile;
 
@@ -34,7 +34,7 @@ class MobileSdk
         $data = array(
             'mchnt_cd'       => $this->mchnt_cd,
             'city_id'        => $params['city_id'], //开户行地区代码
-            'mchnt_txn_ssn'  => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn'  => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'parent_bank_id' => $params['parent_bank_id'], //开户行行别
             'bank_nm'        => $params['bank_nm'], //开户行支行名称
             'capAcntNm'      => '', //提现账户开户名
@@ -53,20 +53,22 @@ class MobileSdk
     }
 
     /**
-     * 个人用户自助开户注册（网页版）
+     * APP开户注册
      * @param  [array] $params [开户参数]
      * @return [object]         [返回处理数据]
      */
-    public function webReg(array $params)
+    public function appWebReg(array $params)
     {
         $data = array(
+            'ver'             => '0.44',
             'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'user_id_from'    => $params['user_id_from'],
+            'mchnt_txn_ssn'   => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'user_id_from'    => $params['user_id_from'], //用户在商户系统的标志
             'mobile_no'       => $params['mobile_no'], //手机号码
-            'cust_nm'         => $params['cust_nm'], //银行账户户名
+            'cust_nm'         => $params['cust_nm'], //姓名
+            'certif_tp'       => 0, //证件类型
             'certif_id'       => $params['certif_id'], //身份证号码/证件
-            'email'           => '', //邮箱地址
+            'email'           => $params['email'], //邮箱地址
             'city_id'         => $params['city_id'], //开户行地区代码
             'parent_bank_id'  => $params['parent_bank_id'], //开户行行别
             'bank_nm'         => $params['bank_nm'], //开户行支行名称
@@ -75,74 +77,43 @@ class MobileSdk
             'back_notify_url' => $this->BackUrl . '/webReg', //商户后台通知地址
         );
 
-        return $this->formPost('webReg', $data);
+        return $this->formPost('app/appWebReg', $data);
     }
 
     /**
-     * 商户端个人用户跳转登录页面（网页版）
-     * @param  array  $params [description]
-     * @return [type]         [description]
+     * app 快捷充值接口
+     * @param array $params
+     * @return string
      */
-    public function webLogin(array $params)
+    public function appRecharge500002(array $params)
     {
         $data = array(
-            'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
-            'cust_no'       => $params['cust_no'], //登录账户
-            'location'      => $params['location'], //成功登录后跳转页面代码
-            'amt'           => $params['amt'], //跳转充值、提现页面锁定金额
+            'mchnt_cd'        => $this->mchnt_cd,
+            'mchnt_txn_ssn'   => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'login_id'        => $params['login_id'], //用户id
+            'amt'             => $params['amt'], //充值金额
+            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
         );
 
-        return $this->formPost('webLogin', $data);
+        return $this->formPost('app/500002', $data);
     }
-
     /**
-     * 配置用户短信
-     * @param [type] $params [description]
-     */
-    public function setSms($params)
-    {
-        $data = array(
-            'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
-            'login_id'      => $params['login_id'], //用户登录ID
-            'cztx_tp'       => $params['cztx_tp'], //充值提现
-            'cz_tp'         => $params['cz_tp'], //出账
-            'rz_tp'         => $params['cztx_tp'], //入账
-            'hz_tp'         => $params['hz_tp'], //汇总
-        );
-
-        return $this->post('setSms', $data);
-    }
-
-    /**
-     * 24.PC金账户免登陆授权配置（短信通知+委托交易）
+     * app 提现接口
      * @param  [type] $params [description]
      * @return [type]         [description]
      */
-    public function authConfig($params)
+    public function appCash($params)
     {
         $data = array(
             'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //用户登录ID
-            'busi_tp'         => $params['busi_tp'], //业务类型
-            'page_notify_url' => $this->PageUrl . '/authConfig', //商户返回地址
+            'mchnt_txn_ssn'   => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'login_id'        => $params['login_id'], //提现金额
+            'amt'             => $params['amt'], //解冻金额
+            'page_notify_url' => $this->PageUrl . '/cash', //商户返回地址
+            'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
         );
-
-        return $this->formPost('authConfig', $data);
-    }
-
-    public function changeMobile($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //用户登录ID
-            'page_notify_url' => $this->PageUrl . '/changeMobile', //商户返回地址
-        );
-
-        return $this->formPost('400101', $data);
+        return $this->formPost('app/500003', $data);
     }
 
     /**
@@ -154,7 +125,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn'   => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'login_id'        => $params['login_id'], //用户登录ID
             'page_notify_url' => $this->PageUrl . '/changeCard2', //商户返回地址
         );
@@ -171,7 +142,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //出账账户
             'in_cust_no'    => $params['in_cust_no'], //入账账户
             'amt'           => $params['amt'], //预授权金额
@@ -190,7 +161,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //出账账户
             'in_cust_no'    => $params['in_cust_no'], //入账账户
             'contract_no'   => $params['contract_no'], //预授权合同号
@@ -209,7 +180,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
             'amt'           => $params['amt'], //转账金额
@@ -229,7 +200,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
             'amt'           => $params['amt'], //划拨金额
@@ -249,7 +220,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'cust_no'       => $params['cust_no'], //冻结目标登录账户
             'amt'           => $params['amt'], //冻结金额
             'rem'           => '',
@@ -267,7 +238,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
             'amt'           => $params['amt'], //转账金额
@@ -286,7 +257,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'], //订单号
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(), //订单号
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //付款登录账户
             'amt'           => $params['amt'], //转账金额
@@ -305,7 +276,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'out_cust_no'   => $params['out_cust_no'], //付款登录账户
             'in_cust_no'    => $params['in_cust_no'], //收款登录账户
             'amt'           => $params['amt'], //转账金额
@@ -324,91 +295,13 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'cust_no'       => $params['cust_no'], //解冻目标登录账户
             'amt'           => $params['amt'], //解冻金额
             'rem'           => '',
         );
 
         return $this->post('unFreeze', $data);
-    }
-
-    /**
-     * 商户P2P网站免登录快速充值接口
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function recharge_500001($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //提现金额
-            'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
-        );
-
-        return $this->formPost('500001', $data);
-    }
-
-    /**
-     * 商户P2P网站免登录快速充值接口
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function recharge_500002($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //提现金额
-            'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
-        );
-
-        return $this->formPost('500002', $data);
-    }
-
-    /**
-     * P2P免登录直接跳转网银界面充值接口
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function recharge_500012($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //提现金额
-            'amt'             => $params['amt'], //充值金额
-            'order_pay_type'  => $params['order_pay_type'], //支付类型 B2C B2B
-            'iss_ins_cd'      => $params['iss_ins_cd'], //银行代码，测试光大 0803030000
-            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
-        );
-
-        return $this->formPost('500012', $data);
-    }
-
-    /**
-     * 商户P2P网站免登录提现接口
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function cash($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //提现金额
-            'amt'             => $params['amt'], //解冻金额
-            'page_notify_url' => $this->PageUrl . '/cash', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
-        );
-
-        return $this->formPost('500003', $data);
     }
 
     /**
@@ -420,8 +313,8 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
-            'mchnt_txn_dt'  => $params['mchnt_txn_dt'], //交易日期
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'mchnt_txn_dt'  => isset($params['mchnt_txn_dt']) ? $params['mchnt_txn_dt'] : date('Ymd'), //交易日期
             'cust_no'       => $params['cust_no'], //待查询的登录帐户
         );
 
@@ -437,7 +330,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'user_ids'      => $params['user_ids'], //用户登录ID
             'start_day'     => $params['start_day'], //起始时间
             'end_day'       => $params['end_day'], //截止时间（起止时间不能跨月）
@@ -455,7 +348,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'busi_tp'       => $params['busi_tp'], //交易类型
             'start_day'     => $params['start_day'], //起始时间
             'end_day'       => $params['end_day'], //截止时间（查询范围只允许在31天内或31天前）
@@ -480,7 +373,7 @@ class MobileSdk
         $data = array(
             'ver'           => '0.44',
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'busi_tp'       => $params['busi_tp'], //交易类型（PW11 充值、PWTX 提现、PWTP 退票）
             'txn_ssn'       => $params['txn_ssn'], //交易流水
             'start_time'    => $params['start_time'], //起始时间，格式：yyyy-MM-dd HH:mm:ss
@@ -503,8 +396,8 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
-            'mchnt_txn_dt'  => $params['mchnt_txn_dt'], //交易日期
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'mchnt_txn_dt'  => isset($params['mchnt_txn_dt']) ? $params['mchnt_txn_dt'] : date('Ymd'), //交易日期
             'user_ids'      => $params['user_ids'], //待查询的登录帐户列表
         );
 
@@ -520,8 +413,8 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'       => $this->mchnt_cd,
-            'mchnt_txn_ssn'  => $params['mchnt_txn_ssn'],
-            'mchnt_txn_dt'   => $params['mchnt_txn_dt'], //交易日期
+            'mchnt_txn_ssn'  => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'mchnt_txn_dt'   => isset($params['mchnt_txn_dt']) ? $params['mchnt_txn_dt'] : date('Ymd'), //交易日期
             'user_ids'       => $params['user_ids'], //待查询的登录帐户列表
             'user_idNos'     => $params['user_idNos'], //待查询的登录省份证列表
             'user_bankCards' => $params['user_bankCards'], //待查询的登录银行卡列表
@@ -539,7 +432,7 @@ class MobileSdk
     {
         $data = array(
             'mchnt_cd'      => $this->mchnt_cd,
-            'mchnt_txn_ssn' => $params['mchnt_txn_ssn'],
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
             'login_id'      => $params['login_id'], //用户登录ID
             'txn_ssn'       => $params['txn_ssn'], //请求流水
         );
@@ -579,70 +472,6 @@ class MobileSdk
         curl_close($ch);
 
         return $this->handle($url, $data, $result);
-    }
-
-    /**
-     * APP开户注册
-     * @param  [array] $params [开户参数]
-     * @return [object]         [返回处理数据]
-     */
-    public function appWebReg(array $params)
-    {
-        $data = array(
-            'ver'             => '0.44',
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'user_id_from'    => $params['user_id_from'], //用户在商户系统的标志
-            'mobile_no'       => $params['mobile_no'], //手机号码
-            'cust_nm'         => $params['cust_nm'], //姓名
-            'certif_tp'       => 0, //证件类型
-            'certif_id'       => $params['certif_id'], //身份证号码/证件
-            'email'           => $params['email'], //邮箱地址
-            'city_id'         => $params['city_id'], //开户行地区代码
-            'parent_bank_id'  => $params['parent_bank_id'], //开户行行别
-            'bank_nm'         => $params['bank_nm'], //开户行支行名称
-            'capAcntNo'       => $params['capAcntNo'], //银行账户卡号
-            'page_notify_url' => $this->PageUrl . '/webReg', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/webReg', //商户后台通知地址
-        );
-
-        return $this->formPost('app/appWebReg', $data);
-    }
-
-    /**
-     * app 快捷充值接口
-     * @param array $params
-     * @return string
-     */
-    public function appRecharge500002(array $params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //用户id
-            'amt'             => $params['amt'], //充值金额
-            'page_notify_url' => $this->PageUrl . '/recharge', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/recharge', //商户后台通知地址
-        );
-
-        return $this->formPost('app/500002', $data);
-    }
-    /**
-     * app 提现接口
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function appCash($params)
-    {
-        $data = array(
-            'mchnt_cd'        => $this->mchnt_cd,
-            'mchnt_txn_ssn'   => $params['mchnt_txn_ssn'],
-            'login_id'        => $params['login_id'], //提现金额
-            'amt'             => $params['amt'], //解冻金额
-            'page_notify_url' => $this->PageUrl . '/cash', //商户返回地址
-            'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
-        );
-        return $this->formPost('app/500003', $data);
     }
 
     /**
