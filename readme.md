@@ -23,3 +23,14 @@ composer require colyii/laravel-fuiou dev-master
 运行 php artisan vendor:publish 命令
 
 配置文件 config/colyii-fuiou.php 已经生成，按照要求配置即可
+
+DEMO
+
+PC 查询余额
+
+$fuiou   = app('PcFuiou');
+$params = [
+	'cust_no' => '18672385088',
+];
+
+$balance = $fuiou->balanceAction($params);
