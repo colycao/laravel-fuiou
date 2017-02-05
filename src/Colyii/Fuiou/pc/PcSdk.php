@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 14:58:55
+ * @Last Modified time: 2017-02-05 15:13:38
  */
 namespace Colyii\Fuiou\pc;
 
@@ -597,7 +597,7 @@ class PcSdk
             if ('0000' == $plain->resp_code) {
                 $r = $plain; //返回对象
             } else {
-                $r = HelperFunction::log($url, $plain->resp_code, $data, HelperFunction::pinjie_rsaSign($data)); //返回数组
+                $r = HelperFunction::log($url, $plain->resp_code, $data, HelperFunction::pinjie_rsaSign($data, $url)); //返回数组
             }
         }
         return $r;
