@@ -3,9 +3,11 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 13:53:31
+ * @Last Modified time: 2017-02-05 14:00:38
  */
 namespace Colyii\Fuiou\mobile;
+
+use Colyii\Fuiou\pc\HelperFunction;
 
 /**
  * 富友金账户
