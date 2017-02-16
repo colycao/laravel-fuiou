@@ -32,5 +32,14 @@ $fuiou   = app('PcFuiou');
 $params = [
 	'cust_no' => '18672385088',
 ];
-
 $balance = $fuiou->balanceAction($params);
+
+=============================================
+
+Mobile 开户
+$fuiou = app('MobileFuiou');
+$params = [
+    *** //app 页面开户参数
+];
+$rsaSign = $fuiou->rsaSign($params, 'app/appWebReg');
+$balance = $fuiou->appWebReg($params, $rsaSign);
