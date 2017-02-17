@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 15:12:31
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 11:21:46
+ * @Last Modified time: 2017-02-17 17:14:30
  */
 
 namespace Colyii\Fuiou;
@@ -37,8 +37,8 @@ class FuiouServiceProvider extends ServiceProvider {
 			$pcFuiou->privateKeyPath = __DIR__ . '/config/key/php_prkey.pem';
 			$pcFuiou->publicKeyPath = __DIR__ . '/config/key/php_pbkey.pem';
 			$pcFuiou->jzhUrl = config('colyii-fuiou.jzhUrl');
-			$pcFuiou->PageUrl = config('colyii-fuiou.PageUrl');
-			$pcFuiou->BackUrl = config('colyii-fuiou.BackUrl');
+			$pcFuiou->PageUrl = url()->previous() . config('colyii-fuiou.PageUrl');
+			$pcFuiou->BackUrl = url()->previous() . config('colyii-fuiou.BackUrl');
 			return $pcFuiou;
 		});
 		//mobile 对象绑定
@@ -53,8 +53,8 @@ class FuiouServiceProvider extends ServiceProvider {
 			$mobileFuiou->privateKeyPath = __DIR__ . '/config/key/php_prkey.pem';
 			$mobileFuiou->publicKeyPath = __DIR__ . '/config/key/php_pbkey.pem';
 			$mobileFuiou->jzhUrl = config('colyii-fuiou.jzhUrl');
-			$mobileFuiou->PageUrl = config('colyii-fuiou.PageUrl');
-			$mobileFuiou->BackUrl = config('colyii-fuiou.BackUrl');
+			$mobileFuiou->PageUrl = url()->previous() . config('colyii-fuiou.PageUrl');
+			$mobileFuiou->BackUrl = url()->previous() . config('colyii-fuiou.BackUrl');
 			return $mobileFuiou;
 		});
 	}
