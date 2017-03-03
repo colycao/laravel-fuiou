@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-03-02 16:24:23
+ * @Last Modified time: 2017-03-03 11:11:15
  */
 namespace Colyii\Fuiou\mobile;
 
@@ -98,6 +98,23 @@ class MobileSdk
         );
         $signature = $this->rsaSign($data, 'app/appWebLogin');
         return $this->formPost('app/appWebLogin', $data, $signature);
+    }
+
+    /**
+     * 更换通知手机号
+     * @param  [type] $params [description]
+     * @return [type]         [description]
+     */
+    public function changeMobile($params)
+    {
+        $data = array(
+            'mchnt_cd' => $this->mchnt_cd,
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'login_id' => $params['login_id'], //用户登录ID
+            'page_notify_url' => $this->PageUrl . '/changeMobile', //商户返回地址
+        );
+        $signature = $this->rsaSign($data, 'app/400101');
+        return $this->formPost('app/400101', $data, $signature);
     }
 
     /**
