@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-03-03 11:11:15
+ * @Last Modified time: 2017-03-06 16:50:55
  */
 namespace Colyii\Fuiou\mobile;
 
@@ -151,6 +151,24 @@ class MobileSdk
             'back_notify_url' => $this->BackUrl . '/cash', //商户后台通知地址
         );
         return $this->formPost('app/500003', $data, $signature);
+    }
+
+    /**
+     * APP金账户免登陆授权配置（短信通知+委托交易）
+     * @param  [type] $params [description]
+     * @return [type]         [description]
+     */
+    public function authConfig($params)
+    {
+        $data = array(
+            'mchnt_cd' => $this->mchnt_cd,
+            'mchnt_txn_ssn' => isset($params['mchnt_txn_ssn']) ? $params['mchnt_txn_ssn'] : HelperFunction::buildOn(),
+            'login_id' => $params['login_id'], //用户登录ID
+            'busi_tp' => $params['busi_tp'], //业务类型
+            'page_notify_url' => $this->PageUrl . '/authConfig', //商户返回地址
+        );
+        $signature = $this->rsaSign($data, 'app/authConfig');
+        return $this->formPost('app/authConfig', $data, $signature);
     }
 
     /**
