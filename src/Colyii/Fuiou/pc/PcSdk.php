@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-01-19 16:56:05
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-02-05 15:13:38
+ * @Last Modified time: 2017-03-09 16:08:44
  */
 namespace Colyii\Fuiou\pc;
 
@@ -566,7 +566,7 @@ class PcSdk {
 			if ('0000' == $plain->resp_code) {
 				$r = $plain; //返回对象
 			} else {
-				$r = HelperFunction::log($url, $plain->resp_code, $data, HelperFunction::pinjie_rsaSign($data, $url)); //返回数组
+				$r = HelperFunction::log($url, $plain->resp_code, $data, HelperFunction::pinjieRsasign($data, $url)); //返回数组
 			}
 		}
 		return $r;
@@ -579,7 +579,7 @@ class PcSdk {
 	 * return 签名结果
 	 */
 	public function rsaSign($data, $url = '') {
-		$data = HelperFunction::pinjie_rsaSign($data, $url);
+		$data = HelperFunction::pinjieRsasign($data, $url);
 		$private_key_path = $this->privateKeyPath;
 		$priKey = file_get_contents($private_key_path);
 		$res = openssl_get_privatekey($priKey);
@@ -606,7 +606,7 @@ class PcSdk {
 
 		if (is_array($data) && true === $form) {
 			$sign = $data['signature']; //去掉返回签名值
-			$data = HelperFunction::pinjie_rsaVerify($data);
+			$data = HelperFunction::pinjieRsaverify($data);
 			$result = (bool) openssl_verify($data, base64_decode($sign), $res);
 		} else {
 			try {
