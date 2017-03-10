@@ -3,7 +3,7 @@
  * @Author: Coly Cao
  * @Date:   2017-02-04 16:25:28
  * @Last Modified by:   Coly Cao
- * @Last Modified time: 2017-03-06 16:52:03
+ * @Last Modified time: 2017-03-10 09:43:58
  */
 namespace Colyii\Fuiou\pc;
 
@@ -74,7 +74,7 @@ class HelperFunction
     }
 
     /**
-     * [xml_object xml转对象]
+     * [xmlObject xml转对象]
      * @param  [xml] $xml [待处理的xml数据]
      * @return [object]      [返回对象]
      */
